@@ -6,6 +6,12 @@ abstract class LibraryItem {
     String title;
     String author;
     boolean available=true;
+    LibraryItem(int itemId, String title, String author) {
+        this.itemId = itemId;
+        this.title = title;
+        this.author = author;
+        this.available = true; // default available
+    }
     abstract void displayInfo();
    // public abstract boolean getStatus();
     void borrow() {
@@ -13,7 +19,7 @@ abstract class LibraryItem {
         available = false;
         System.out.println("Item borrowed");
     } else {
-        System.out.println("Item is not available");
+        System.out.println("Item is already borrowed");
     }
 }
     void returnItem() {
@@ -24,13 +30,7 @@ abstract class LibraryItem {
         System.out.println("Item was not borrowed");
     }
 }
-    void isAvailable(boolean available) {
-        if(available){
-            System.out.println("Item is available");
-        } else {
-            System.out.println("Item is not available");
-        }
-    }
+    
 }
 
 class Book extends LibraryItem{
@@ -38,12 +38,10 @@ class Book extends LibraryItem{
     
     
     Book(int ISBN, int id, String title, String author){
+        super(id, title, author);
         this.ISBN = ISBN;
-        this.itemId = id;
-        this.title = title;
-        this.author = author;
-        this.available = true;
-    }               
+    }    
+      @Override           
       void displayInfo(){
         System.out.println("ISBN: " + ISBN);
         System.out.println("ID: " + itemId);
@@ -57,12 +55,10 @@ class Magazine extends LibraryItem{
         private int issueNumber;
 
         Magazine(int itemId, int issueNumber, String title, String author){
-            this.itemId = itemId;
+            super(itemId, title, author);
             this.issueNumber = issueNumber;
-            this.title = title;
-            this.author = author;
-            this.available = true;
         }
+        @Override
         void displayInfo(){
             System.out.println("Item ID: " + itemId);
             System.out.println("Issue Number: " + issueNumber);
@@ -100,6 +96,10 @@ public class Main {
             String author = scanner.nextLine();
             System.out.println("Enter ISBN: ");
             int ISBN = scanner.nextInt();
+            if(libraryItems.get(itemId) != null){
+                System.out.println("Item ID already exists. Please enter a unique Item ID.");
+                continue;
+            }
             Book book = new Book(ISBN, itemId, title, author);
             libraryItems.add(book);
         }
@@ -114,6 +114,10 @@ public class Main {
             System.out.println("Enter Issue Number:");
            
             int issueNumber = scanner.nextInt();
+            if(libraryItems.get(itemId) != null){
+                System.out.println("Item ID already exists. Please enter a unique Item ID.");
+                continue;
+            }
             Magazine magazine = new Magazine(itemId,issueNumber, title, author);
             libraryItems.add(magazine);
         }
